@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  
+  <meta name="viewport"
+      content="width=device-width,
+               initial-scale=1,
+               maximum-scale=1,
+               minimum-scale=1,
+               user-scalable=no,
+               viewport-fit=cover">
+  
+  <title>BENTO Admin</title>
 
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?v=5">
+</head>
+
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading" class="screen active">
+  <div class="loader-wrap">
+
+    <svg class="ios-loader" width="120" height="120"
+         viewBox="0 0 120 120" fill="none"
+         xmlns="http://www.w3.org/2000/svg">
+
+      <defs>
+        <linearGradient id="grad-loader" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="50%" stop-color="#b6c7ff"/>
+          <stop offset="100%" stop-color="#7dffe0"/>
+        </linearGradient>
+
+        <filter id="softGlow">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <circle cx="60" cy="60" r="44"
+              stroke="url(#grad-loader)"
+              stroke-width="4"
+              stroke-linecap="round"
+              opacity="0.85"
+              filter="url(#softGlow)"
+              stroke-dasharray="180">
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0 60 60"
+          to="360 60 60"
+          dur="1.2s"
+          repeatCount="indefinite"/>
+      </circle>
+
+      <circle cx="60" cy="60" r="5"
+              fill="#7dffe0"
+              filter="url(#softGlow)"/>
+
+    </svg>
+
+    <div class="loader-text">BENTO TEAM</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="screen"></div>
+
+<script src="./index.js"></script>
+</body>
+</html>
